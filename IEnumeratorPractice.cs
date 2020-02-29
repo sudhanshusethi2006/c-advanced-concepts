@@ -11,7 +11,7 @@ namespace LinkedList
 
 
 
-    class Employee 
+    class Employee : IComparable
     {
         public int id;
         public string name;
@@ -25,15 +25,15 @@ namespace LinkedList
 
 
 
-        //public int CompareTo(object obj)
-        //{
-        //    Employee other = (Employee)obj;
-        //    // here you can compare two objects 
+        public int CompareTo(object obj)
+        {
+            Employee other = (Employee)obj;
+            // here you can compare two objects 
 
-        //    if (this.id > other.id) return 1;
-        //    else if (this.id < other.id) return -1;
-        //    else return 0;
-        //}
+            if (this.id > other.id) return 1;
+            else if (this.id < other.id) return -1;
+            else return 0;
+        }
 
 
     }
@@ -48,7 +48,25 @@ namespace LinkedList
         {
             Employee first = (Employee)x;
             Employee second = (Employee)y;
-            return first.id - second.id;
+       
+
+        
+            if (first.id > second.id)
+            {
+                return 1;
+            }
+            else if (first.id < second.id)
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
+            }
+
+            //or
+
+          //  return first.id - second.id;
         }
     }
     class IEnumeratorPractice
@@ -59,8 +77,8 @@ namespace LinkedList
             ArrayList myArrayListofEmployees = new ArrayList();
 
             //// for Array List
-            myArrayListofEmployees.Add(new Employee() { id = 3, name = "sudhanshu" });
-            myArrayListofEmployees.Add(new Employee() { id = 1, name = "srishti" });
+            myArrayListofEmployees.Add(new Employee() { id = 3, name = "sam" });
+            myArrayListofEmployees.Add(new Employee() { id = 1, name = "sid" });
             myArrayListofEmployees.Add(new Employee() { id = 2, name = "susan" });
 
             IEnumerator en = myArrayListofEmployees.GetEnumerator();
@@ -72,8 +90,8 @@ namespace LinkedList
             EmployeeComparer ec = new EmployeeComparer();
             myArrayListofEmployees.Sort(ec);
             // for Linked List
-            mylistofEmployees.AddLast(new Employee() { id = 1, name = "sudhanshu" });
-            mylistofEmployees.AddLast(new Employee() { id = 2, name = "srishti" });
+            mylistofEmployees.AddLast(new Employee() { id = 1, name = "sam" });
+            mylistofEmployees.AddLast(new Employee() { id = 2, name = "sid" });
             mylistofEmployees.AddLast(new Employee() { id = 3, name = "susan" });
             IEnumerator en2 = mylistofEmployees.GetEnumerator();
             while (en2.MoveNext())
@@ -87,27 +105,5 @@ namespace LinkedList
 
     }
 
-    //class a
-    //{
-    //    public virtual void getinfo()
-    //    {
-    //        Console.WriteLine("hello from base");
-    //    }
 
-    //}
-
-    //class IEnumeratorPractice : a
-    //{
-
-    //    public  override void getinfo()
-    //    {
-    //        base.getinfo();
-    //    }
-    //   public static void Main(string[] args)
-    //    {
-    //        IEnumeratorPractice obj = new IEnumeratorPractice();
-    //        obj.getinfo();
-    //    }
-
-    //}
 }
