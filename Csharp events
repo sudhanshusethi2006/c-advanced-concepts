@@ -1,0 +1,52 @@
+ public delegate int WorkPerformedHandler2(int hours, WorkType o);
+    class Worker
+    {
+
+        // event
+
+        public event WorkPerformedHandler2 workPereformed_event;
+        public event EventHandler workCompleted_event; // in built  event which uses event handler delegate
+        public void DoWork(int hours, WorkType workType)
+        {
+
+            for(int i = 1; i < hours; i++)
+            {
+                onWorkPereformed_event(i + 1, workType);
+            }
+
+            onWorkCompleted_event();
+        }
+
+    
+        public virtual void onWorkPereformed_event(int hours, WorkType workType)
+        {
+
+            // option 1
+            if (workPereformed_event != null)
+            {
+                workPereformed_event(8, WorkType.coding);
+            }
+
+            // option 2
+            WorkPerformedHandler2 del = workPereformed_event as WorkPerformedHandler2;
+            if (del != null)
+            {
+                del(hours, workType);
+            }
+        }
+
+        public virtual void onWorkCompleted_event()
+        {
+            EventHandler del = workCompleted_event as EventHandler;
+            if (del != null){
+                del(this, EventArgs.Empty);
+            }
+        }
+    }
+
+    public enum WorkType
+    {
+        coding,
+        reports,
+        meetings
+    }
