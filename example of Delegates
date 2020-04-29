@@ -1,0 +1,79 @@
+ class Delegates
+    {
+
+
+
+        static void Main(string[] args)
+        {
+
+            DelegetaesExamples obj = new DelegetaesExamples();
+            WorkPerformedHandler del1 = new WorkPerformedHandler(obj.workPerformed1);
+            WorkPerformedHandler del2 = new WorkPerformedHandler(obj.workPerformed2);
+            WorkPerformedHandler del3 = new WorkPerformedHandler(obj.workPerformed3);
+
+
+            DoWork(del1);
+            DoWork(del2);
+            // 
+
+
+            Console.WriteLine("multi cast delegate");
+
+
+            del1 += del2 + del3;
+            del1(15, WorkPerformed.reports);
+
+
+
+            Console.WriteLine(",ethods returning values");
+            int ans = del1(10, WorkPerformed.reports);
+
+            Console.WriteLine("last method of invocation list is returned into the answer as : {0} ", ans);
+
+
+            //del1(5, WorkPerformed.coding);
+            //del2(10, WorkPerformed.meetings);
+            // del1 += del2;
+        }
+
+        static void DoWork(WorkPerformedHandler del1)
+        {
+            del1(5, WorkPerformed.coding);
+        }
+    }
+
+    public enum WorkPerformed
+    {
+        coding, 
+        reports, 
+        meetings
+    }
+
+    class DelegetaesExamples
+    {
+
+
+
+        public int workPerformed1(int hours, WorkPerformed o)
+        {
+            Console.WriteLine("hello1 " + hours);
+
+            return hours + 1;
+
+        }
+
+        public int workPerformed2(int hours, WorkPerformed o)
+        {
+            Console.WriteLine("hello2 " + hours);
+
+            return hours + 2;
+        }
+
+        public int workPerformed3(int hours, WorkPerformed o)
+        {
+            Console.WriteLine("hello3 " + hours);
+
+
+            return hours + 3;
+        }
+    }
