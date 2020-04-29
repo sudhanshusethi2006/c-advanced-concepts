@@ -1,0 +1,160 @@
+ class students 
+    {
+        public int id;
+        public string name;
+        public int age;
+
+        public students(int id, string name, int age)
+        {
+            this.id = id;
+            this.name = name ?? throw new ArgumentNullException(nameof(name));
+            this.age = age;
+        }
+
+        public students() { }
+    }
+        class CreateCustomList
+    {
+
+
+        public static void Main(String[] args)
+        {
+           
+
+            CustomLinkedList<students> allStudents = new CustomLinkedList<students>();
+            allStudents.Add(new students(1, "john", 29));
+
+            allStudents.Add(new students(3, "bob", 28));
+            allStudents.Add(new students(2, "Andrew", 34));
+            allStudents.Add(new students(4, "Allen", 19));
+            allStudents.Add(new students { id = 4, name = "calvin", age = 19 });
+
+            foreach (students n in allStudents)
+            {
+                Console.WriteLine("elements in the Linked list" + n.name);
+            }
+        }
+    }
+
+    class CustomLinkedList<T>: IEnumerable
+    {
+        Node head;
+        public T this[int index]
+        {
+            get { return getDataAtIndex(index); }
+        }
+        public void AddAtBeginning(T data)
+        {
+
+            Node obj = new Node(data);
+            obj.next = head;
+            head = obj;
+
+        }
+
+      public   T getDataAtIndex(int index)
+        {
+            int counter = 0;
+            Node temp = head;
+            while (temp != null)
+            {
+                if (counter == index)
+                {
+                    break;
+                }
+                else
+                {
+                    temp = temp.next;
+                    counter++;
+                }
+            }
+            return temp.Data;
+        }
+
+        public int count()
+        {
+            int count = 0;
+            Node temp = head;
+            while (temp != null)
+            {
+                count++;
+                temp = temp.next;
+            }
+
+           return count;
+        }
+        public void Add(T data)
+        {
+            if (head == null)
+            {
+                Node obj = new Node(data);
+                head = obj;
+            }
+
+            else
+            {
+                Node temp = head;
+                Node obj = new Node(data);
+                while (temp.next != null)
+                {
+                    temp = temp.next;
+                }
+                temp.next = obj;
+            }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return new CustomLinkedListEnumerator(this);
+        }
+
+      public  class Node
+        {
+            public T Data;
+            public Node next;
+
+            public Node(T data)
+            {
+                Data = data;
+
+            }
+        }
+
+        class CustomLinkedListEnumerator : IEnumerator
+        {
+
+
+            CustomLinkedList<T> list;
+            int CurrentIndex;
+            T currentObject;
+
+            public CustomLinkedListEnumerator(CustomLinkedList<T> CustomList)
+            {
+                list = CustomList;
+                CurrentIndex = -1;
+            }
+
+            public object Current
+            {
+                get
+                {
+                    return currentObject;
+                }
+            }
+
+          
+
+            public bool MoveNext()
+            {
+                if (++CurrentIndex >= list.count()) return false;
+                else currentObject = list.getDataAtIndex(CurrentIndex);
+                return true;
+            }
+
+            public void Reset()
+            {
+                CurrentIndex = -1;
+            }
+        }
+
+    }
