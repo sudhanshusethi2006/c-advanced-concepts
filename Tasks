@@ -1,0 +1,146 @@
+ class EntryPoint
+    {
+
+        static void Main(string[] args)
+        {
+            ParameterizedThreadStart p = new ParameterizedThreadStart(MassiveSumThread);
+            Thread mythread = new Thread(p);
+            Console.WriteLine("Thread started");
+
+            mythread.Start(4);
+            mythread.Join(500);
+            Console.WriteLine("Thread ended");
+
+            Console.WriteLine(new string('-',50));
+
+            //------------------------------------------------------
+            Task t1 = new Task(ConcatenateChars);
+            //   t1.Start();
+            Console.WriteLine("In Prgress");
+            // t1.Wait();
+            Console.WriteLine("Completed");
+
+
+            // using task factory to intialize the task
+
+            Task t2 = Task.Factory.StartNew(ConcatenateChars);
+
+            Task t4 = Task.Factory.StartNew(() => ConcatenateChars2('1', 200000));
+
+            // using Run
+
+            Task t3 = new Task(new Action(ConcatenateChars));
+
+            //-------// task with data return
+            // we have to make our task generic if the method returns something
+            Task<string> t5 = Task.Factory.StartNew(() => ConcatenateChars3('1', 200000));
+
+
+            // when await keyword is used and await and asyn no need to call wait method
+            //
+
+            Task<string> t = ConcatenateCharsAsync('1', 20000);
+            Console.WriteLine("In Prgress");
+
+            Console.WriteLine("The length of the result is " + t.Result.Length);
+
+
+
+            Task<int> SumTask = CalculateMassiveSum(5);
+
+        }
+
+        public static async Task<int> CalculateMassiveSum(int i)
+        {
+            return await Task<int>.Factory.StartNew(() =>
+            {
+                return MassiveSum(i);
+            });
+        }
+
+        public static void MassiveSumThread(object i)
+        {
+            double k = 1;
+            for(int j=1;j<1000;j++)
+            {
+                k *=(double) i;                
+            }
+
+            Console.WriteLine(k);
+
+        }
+        public static int MassiveSum(int i)
+        {
+            int cal = 1;
+            for (int j = 0; j < 100; j++)
+            {
+                cal *= i;
+            }
+            return cal;
+        }
+        public static string ConcatenateChars4(char characterToConcatenate, int count)
+        {
+            string ConcatenatedString = string.Empty;
+            for (int i = 0; i < count; i++)
+            {
+                ConcatenatedString += characterToConcatenate;
+                //    Console.WriteLine(ConcatenatedString);
+            }
+            return ConcatenatedString;
+        }
+
+        public static void ConcatenateChars()
+        {
+            string ConcatenatedString = string.Empty;
+            for (int i = 0; i < 200000; i++)
+            {
+                ConcatenatedString += "1";
+                //    Console.WriteLine(ConcatenatedString);
+            }
+        }
+
+        public static void ConcatenateChars2(char characterToConcatenate, int count)
+        {
+            string ConcatenatedString = string.Empty;
+            for (int i = 0; i < count; i++)
+            {
+                ConcatenatedString += characterToConcatenate;
+                //    Console.WriteLine(ConcatenatedString);
+            }
+        }
+
+        public static string ConcatenateChars3(char characterToConcatenate, int count)
+        {
+            string ConcatenatedString = string.Empty;
+            for (int i = 0; i < count; i++)
+            {
+                ConcatenatedString += characterToConcatenate;
+                //    Console.WriteLine(ConcatenatedString);
+            }
+
+            return ConcatenatedString;
+        }
+
+        public async static Task<string> ConcatenateCharsAsync(char characterToConcatenate, int count)
+        {
+
+            return await Task<string>.Factory.StartNew(() =>
+            {
+                return ConcatenateChars4(characterToConcatenate, count);
+            });
+            //string result;
+            //result = await t;
+            //Console.WriteLine("Completed");
+            //return result; ;
+
+        }
+        public static async void MyMethod()
+        {
+
+            await Task.Delay(20000);
+
+
+        }
+
+
+    }
