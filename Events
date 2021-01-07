@@ -1,0 +1,91 @@
+    class EntryPoint
+    {
+        
+        public  delegate int MyDelagte(int input);
+        public static event MyDelagte Myevent;
+
+        public delegate void VideoEncodedEventsHandler(object source, PhotoShoot args);
+        public event VideoEncodedEventsHandler VideoEncoded;
+
+        public static event EventHandler<PhotoShoot> MyEventHandler2;
+        public static event EventHandler MyEventHandler1;
+
+
+        static void Main(string[] args)
+        {
+
+            Myevent += Subscriber;
+            MyEventHandler1 += Subscriber1;
+            MyEventHandler2 += Subscriber2;
+
+            Myevent.Invoke(12);
+            MyEventHandler1.Invoke("event", new ShotsFiredEventArgs(DateTime.Now));
+            MyEventHandler2.Invoke("event", new PhotoShoot());
+
+        }
+
+        public static int Subscriber(int inout)
+        {
+            return 0;
+        }
+           
+        public static void Subscriber1(object a, EventArgs b)
+        {
+            
+        }
+        public static void Subscriber2(object a, PhotoShoot b)
+        {
+
+        }
+
+        public static void Encode(object Video)
+        {
+         
+        }
+      
+    }
+    //---------------------------------
+    
+     class PhotoShoot 
+    {
+        
+        public delegate void KillingHandler(object sender, EventArgs e);
+
+        public event KillingHandler ShortsFired;
+        //public event EventHandler<ShotsFiredEventArgs> shortsFired;
+
+        private Random random = new Random();
+
+
+        public void onShoot()
+        {
+            while (true)
+            {
+                if (random.Next(0, 100) % 2 == 0)
+                {
+                    if (ShortsFired != null)
+                    {
+                        ShortsFired.Invoke(this, EventArgs.Empty);
+                    }
+                    else
+                    {
+                        Console.WriteLine("I ShortsFired");
+                    }
+                }
+            }
+
+         
+        }
+    }
+    
+    ///-----------------------------------
+    
+        class ShotsFiredEventArgs: EventArgs
+    {
+        public DateTime TimeOfKill { get; set; }
+
+        public ShotsFiredEventArgs(DateTime time)
+        {
+            this.TimeOfKill = time;
+        }
+    }
