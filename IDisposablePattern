@@ -1,0 +1,100 @@
+class GarbageCollection
+    {
+        // we implement IDisposable only for unmanaged resoucres 
+
+        // unmanaged resources are the resources that cannot be taken care by our GC and is taken
+        // care by the developer such as such as invoke methods to open native resources 
+
+        // determine the live object and dead object 
+
+        // Heap is divided into 3 generation gen0, gen 1, gen 2
+
+        // newly created are gadded to gen0. when gen0 is full it gives to gen1. 
+
+        // gen2 contains longest lived objects. 
+
+        // marking phase: create the list of live objects 
+
+        static void Main(string[] args)
+        {
+            using var serviceProxy = new ServiceProxy(null);
+            // here using is like using try and finally like this
+            //using calls the Dispose internally like this-
+            /*
+             * var serviceProxy=null;
+             * try{
+             * 
+             * serviceProxy= new ServiceProxy(null);
+             * serviceProxy.Get();
+             * serviceProxy.Post("");
+             * }
+             * 
+             * finally
+             * {
+             *   serviceProxy.Dispose();
+             * }
+             * 
+             * 
+             * */
+            serviceProxy.Get();
+            serviceProxy.Post("");
+
+        }
+
+
+    }
+
+
+    public class ServiceProxy : IDisposable
+    {
+        private readonly HttpClient httpClient;
+        private bool disposed;
+        // in case the user doesnt call the Dispose method or does not use using
+
+        ~ServiceProxy() // this is Destructor is also called as the FINALIZER METHOD
+        {
+            Dispose(false);// this Destructor is called by GC after all the managed objects are Already DISPOSED
+            
+        }
+
+        public ServiceProxy(HttpClient httpClient)
+        {
+            this.httpClient = httpClient;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);// We dont want the Destructor to be called now as we know Dispose method 
+            // is called by now
+        }
+
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                httpClient.Dispose();
+                // Dispose Managed Objects
+            }
+
+            // Dispose unmanaged objects
+            disposed = true;
+        }
+        public void Get()
+        {
+            var response = httpClient.GetAsync("");
+        }
+
+        public void Post(string request)
+        {
+            var response = httpClient.PostAsync("", new StringContent(""));
+        }
+
+
+    }
